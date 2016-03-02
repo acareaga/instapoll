@@ -25,5 +25,12 @@
   "bugs": {
     "url": "https://github.com/acareaga/instapoll/issues"
   },
-  "homepage": "https://github.com/acareaga/instapoll#readme"
+  "homepage": "https://github.com/acareaga/instapoll#readme",
+  "dependencies": {
+    "express": "4.13.4"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "mocha": "2.4.5"
+  }
 }
