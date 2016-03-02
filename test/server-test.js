@@ -46,6 +46,33 @@ describe('Server', () => {
 
   });
 
+  describe('GET /polls/:id', () => {
+
+    beforeEach(() => {
+      app.locals.polls.testPoll = fixtures.validPoll;
+    });
+
+    it('should not return 404', (done) => {
+      this.request.get('/polls/testPoll', (error, response) => {
+        if (error) { done(error); }
+        assert.notEqual(response.statusCode, 404);
+        done();
+      });
+    });
+
+    it('should return a page that has the title of the pizza', (done) => {
+      var poll = app.locals.polls.testPoll;
+
+      this.request.get('/polls/testPoll', (error, response) => {
+        if (error) { done(error); }
+        assert(response.body.includes(poll.name),
+               `"${response.body}" does not include "${poll.name}".`);
+        done();
+      });
+    });
+
+  });
+
   describe('POST /polls', () => {
 
     beforeEach(() => {
@@ -72,6 +99,17 @@ describe('Server', () => {
         if (error) { done(error); }
         var pollCount = Object.keys(app.locals.polls).length;
         assert.equal(pollCount, 1, `Expected 1 poll, found ${pollCount}`);
+        done();
+      });
+    });
+
+    it('should redirect the user to their new poll', (done) => {
+      var payload = { poll: fixtures.validPoll };
+
+      this.request.post('/polls', { form: payload }, (error, response) => {
+        if (error) { done(error); }
+        var newPollId = Object.keys(app.locals.polls)[0];
+        assert.equal(response.headers.location, '/polls/' + newPollId);
         done();
       });
     });

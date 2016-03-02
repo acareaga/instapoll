@@ -25,10 +25,16 @@ app.get('/', (request, response) => {
   response.render('index');
 });
 
+app.get('/polls/:id', (request, response) => {
+  var poll = app.locals.polls[request.params.id];
+  response.render('poll', { poll: poll });
+});
+
 app.post('/polls', (request, response) => {
+  if (!request.body.poll) { return response.sendStatus(400); }
   var id = generateId();
-  app.locals.polls[id] = request.body;
-  response.sendStatus(201);
+  app.locals.polls[id] = request.body.poll;
+  response.redirect('/polls/' + id);
 });
 
 // LISTENER
