@@ -1,6 +1,7 @@
 const assert = require('chai').assert;
 const request = require('request');
 const app = require('../server');
+const fixtures = require('./fixtures');
 
 describe('Server', () => {
 
@@ -39,6 +40,38 @@ describe('Server', () => {
         if (error) { done(error); }
         assert(response.body.includes(title),
                `"${response.body}" does not include "${title}".`);
+        done();
+      });
+    });
+
+  });
+
+  describe('POST /polls', () => {
+
+    beforeEach(() => {
+      app.locals.polls = {};
+    });
+
+    it('should receive and store data', (done) => {
+      // Our implementation will go here…
+      assert(true);
+      done();
+    });
+
+    it('should not return 404', (done) => {
+      this.request.post('/polls', (error, response) => {
+        if (error) { done(error); }
+        assert.notEqual(response.statusCode, 404);
+        done();
+      });
+    });
+
+    it('should receive and store data', (done) => {
+      var payload = { poll: fixtures.validPoll };
+      this.request.post('/polls', { form: payload }, (error, response) => {
+        if (error) { done(error); }
+        var pollCount = Object.keys(app.locals.polls).length;
+        assert.equal(pollCount, 1, `Expected 1 poll, found ${pollCount}`);
         done();
       });
     });
