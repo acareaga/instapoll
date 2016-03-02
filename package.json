@@ -1,0 +1,29 @@
+{
+  "name": "instapoll",
+  "version": "1.0.0",
+  "description": "P2P realtime feedback app built with Node, Express, jQuery, and Redis.",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acareaga/instapoll.git"
+  },
+  "keywords": [
+    "Real-Time",
+    "Instant",
+    "Poll",
+    "Feedback",
+    "Node",
+    "Express",
+    "jQuery",
+    "Redis"
+  ],
+  "author": "Aaron Careaga <aaroncareaga@gmail.com> (http://www.aaroncareaga.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/acareaga/instapoll/issues"
+  },
+  "homepage": "https://github.com/acareaga/instapoll#readme"
+}
