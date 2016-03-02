@@ -1,41 +1,92 @@
+const http = require('http');
 const express = require('express');
 const app = express();
-const path = require('path');
+const server = http.createServer(app);
 const bodyParser = require('body-parser');
-const generateId = require('./lib/generate-id');
 
-// LOCAL STORE
-app.locals.polls = {};
+// MAKE SURE SOCKET IO IS BELOW SERVER
+const socketIo = require('socket.io');
+const io = socketIo(server);
+const port = process.env.PORT || 3000;
 
-// TEMPLATE, SWITCH TO HANDLEBARS
-app.use(express.static('static'));
+if (!module.parent) {
+  server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
+}
+
+// JADE
 app.set('view engine', 'jade');
-
-// SETUP FOR PORT AND TITLE
-app.set('port', process.env.PORT || 3000);
-app.locals.title = 'InstaPoll';
 
 // HTTP PARSER
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.static('public'));
 
-// ROUTES
 app.get('/', (request, response) => {
   response.render('index');
 });
 
-app.get('/polls/:id', (request, response) => {
-  var poll = app.locals.polls[request.params.id];
-  response.render('poll', { poll: poll });
+// SOCKET IO CONNECTIONS
+var votes = {};
+
+io.on('connection', function (socket) {
+  console.log('A user has connected.', io.engine.clientsCount);
+
+  // io.sockets.emit to all clients
+  io.sockets.emit('usersConnected', io.engine.clientsCount);
+
+  // socket.emit to only one client
+  socket.emit('statusMessage', 'You have connected.');
+
+  // count votes and show user what they chose
+  socket.on('message', function (channel, message) {
+    if (channel === 'voteCast') {
+      votes[socket.id] = message;
+      socket.emit('voteCount', countVotes(votes));
+      // emit to indv client the vote they cast
+      socket.emit('myVoteCast', 'You voted for "' + message + '"');
+    }
+  });
+
+  // removes user votes on disconnect
+  socket.on('disconnect', function () {
+    console.log('A user has disconnected.', io.engine.clientsCount);
+    delete votes[socket.id];
+    socket.emit('voteCount', countVotes(votes));
+    io.sockets.emit('userConnection', io.engine.clientsCount);
+  });
 });
 
-app.post('/polls', (request, response) => {
-  if (!request.body.poll) { return response.sendStatus(400); }
-  var id = generateId();
-  app.locals.polls[id] = request.body.poll;
-  response.redirect('/polls/' + id);
-});
+// COUNT VOTES - REFACTOR w/LODASH
+function countVotes(votes) {
+  var voteCount = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0
+  };
+  for (var vote in votes) {
+    voteCount[votes[vote]]++
+  }
+  return voteCount;
+}
+
+// ROUTES
+// app.get('/', (request, response) => {
+//   response.render('index');
+// });
+
+// app.get('/polls/:id', (request, response) => {
+//   var poll = app.locals.polls[request.params.id];
+//   response.render('poll', { poll: poll });
+// });
+//
+// app.post('/polls', (request, response) => {
+//   if (!request.body.poll) { return response.sendStatus(400); }
+//   var id = generateId();
+//   app.locals.polls[id] = request.body.poll;
+//   response.redirect('/polls/' + id);
+// });
 
 // LISTENER
 if (!module.parent) {
@@ -44,4 +95,5 @@ if (!module.parent) {
   });
 }
 
-module.exports = app;
+// module.exports = app;
+module.exports = server;

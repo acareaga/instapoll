@@ -4,7 +4,8 @@
   "description": "P2P realtime feedback app built with Node, Express, jQuery, and Redis.",
   "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,9 @@
   "dependencies": {
     "body-parser": "1.15.0",
     "express": "4.13.4",
-    "jade": "1.11.0"
+    "jade": "1.11.0",
+    "lodash": "4.6.1",
+    "socket.io": "1.4.5"
   },
   "devDependencies": {
     "chai": "3.5.0",

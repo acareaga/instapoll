@@ -1,6 +1,33 @@
 doctype html
-html(lang="en")
+html
   head
-    title= title
-  body
-    h1= title
+    title Ask the Audience
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js')
+  main
+    body
+      header
+        nav.z-depth-0.navbar
+          .nav-wrapper.white.lighten-4
+            a#navbar-branding.brand-logo.black-text.center(href='/') Poll the Crowd
+        .container.center
+          br
+          br
+          #status-message
+          #connection-count
+          br
+          h5 Where do you want to eat lunch on Friday?
+          br
+          #choices
+            button A
+            button B
+            button C
+            button D
+          br
+          #my-vote
+          br
+          #vote-count
+          br
+  // Make sure your JS is at the bottom of the body!
+  script(src='/socket.io/socket.io.js')
+  script(src='/client.js')
