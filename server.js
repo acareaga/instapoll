@@ -19,12 +19,7 @@ app.set('view engine', 'jade');
 // HTTP PARSER
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static('public'));
-
-app.get('/', (request, response) => {
-  response.render('index');
-});
 
 // SOCKET IO CONNECTIONS
 var votes = {};
@@ -72,9 +67,14 @@ function countVotes(votes) {
 }
 
 // ROUTES
-// app.get('/', (request, response) => {
-//   response.render('index');
-// });
+app.get('/', (request, response) => {
+  response.render('index');
+});
+
+app.get('/polls/:id', (request, response) => {
+  var poll = app.locals.polls[request.params.id];
+  response.render('poll', { poll: poll });
+});
 
 // app.get('/polls/:id', (request, response) => {
 //   var poll = app.locals.polls[request.params.id];
@@ -88,12 +88,4 @@ function countVotes(votes) {
 //   response.redirect('/polls/' + id);
 // });
 
-// LISTENER
-if (!module.parent) {
-  app.listen(app.get('port'), () => {
-    console.log(`${app.locals.title} is running on ${app.get('port')}.`);
-  });
-}
-
-// module.exports = app;
 module.exports = server;

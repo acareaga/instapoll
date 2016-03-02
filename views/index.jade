@@ -1,33 +1,40 @@
 doctype html
 html
   head
-    title Ask the Audience
+    title InstaPoll
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css')
+    link(rel='stylesheet', href='../public/style.css')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js')
   main
     body
       header
         nav.z-depth-0.navbar
-          .nav-wrapper.white.lighten-4
-            a#navbar-branding.brand-logo.black-text.center(href='/') Poll the Crowd
-        .container.center
-          br
-          br
-          #status-message
-          #connection-count
-          br
-          h5 Where do you want to eat lunch on Friday?
-          br
-          #choices
-            button A
-            button B
-            button C
-            button D
-          br
-          #my-vote
-          br
-          #vote-count
-          br
+          .nav-wrapper.cyan.darken-2
+            a#navbar-branding.brand-logo.white-text.center(href='/') InstaPoll
+      .container.center
+        br
+        br
+        #status-message
+        #connection-count
+        br
+        h5 Where do you want to eat lunch on Friday?
+        br
+        #choices
+          button A
+          button B
+          button C
+          button D
+        br
+        #my-vote
+        br
+        #vote-count
+        br
+      footer.page-footer.cyan.darken-2
+        .footer-copyright
+          .container
+            a.white-text.text-lighten-4.left(href='https://github.com/acareaga', target='_blank') Made by Aaron Careaga
+            .white-text.text-lighten-4.right © 2016 INSTAPOLL
   // Make sure your JS is at the bottom of the body!
   script(src='/socket.io/socket.io.js')
   script(src='/client.js')
