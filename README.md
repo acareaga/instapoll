@@ -24,17 +24,28 @@ npm start
 
 Once the server is running, you can visit:
 
-* `http://localhost:8080/webpack-dev-server/` to run the application.
-* `http://localhost:8080/webpack-dev-server/test.html` to run the test suite in the browser.
-
-To build the static files:
-
-```js
-npm run build
-```
+* `http://localhost:3000
 
 To run tests in Node:
 
 ```js
 npm test
 ```
+## Dependencies
+
+Uses with the following versions:
+
+```
+"express": "4.13.4"
+```
+
+## Contributing
+
+To submit patches:
+* Fork this repository
+* Implement the desired feature with tests (and documentation if necessary)
+* Submit a pull request
+
+## License
+
+The `InstaPoll` codebase is released under the [MIT license](https://opensource.org/licenses/MIT).
