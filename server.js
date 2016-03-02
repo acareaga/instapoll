@@ -5,7 +5,7 @@ app.set('port', process.env.PORT || 3000);
 app.locals.title = 'InstaPoll';
 
 app.get('/', (request, response) => {
-  response.send('Hello World!');
+  response.send(app.locals.title);
 });
 
 if (!module.parent) {
