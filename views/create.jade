@@ -3,4 +3,16 @@ extends layout
 block content
   body
   .container.center
-    CREATE CREATE
+    .row
+      .col.s12.m4.l2
+        p
+      .col.s12.m4.l8
+        .input-field
+          input#poll-title.validate(type='text')
+          label Title
+        .input-field
+          input#poll-response.validate(type='text')
+          label Response
+        .input-field
+          button#create-link.btn.waves-effect.waves-light.cyan.darken-2.submit-button(type='submit', name='action') Create
+        p
