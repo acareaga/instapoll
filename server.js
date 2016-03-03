@@ -69,7 +69,7 @@ function countVotes(votes) {
 
 // ROUTES
 app.get('/', (request, response) => {
-  response.render('index');
+  response.render('create');
 });
 
 app.get('/vote', (request, response) => {
