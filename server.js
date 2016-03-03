@@ -1,4 +1,5 @@
 const http = require('http');
+const $ = require("jquery");
 const express = require('express');
 const app = express();
 const server = http.createServer(app);

@@ -36,7 +36,9 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "jquery": "2.2.1",
     "mocha": "2.4.5",
+    "nodemon": "1.9.1",
     "request": "2.69.0"
   }
 }
