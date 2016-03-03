@@ -1,6 +1,6 @@
 var socket = io();
 
-// LOG VOTE COUNT ON ADMIN
+// LOG VOTE COUNT ON ADMIN -- NEED TO UPDATE AUTOMATICALLY!
 var count = document.getElementById('vote-count');
 
 socket.on('voteCount', function (votes) {
