@@ -23,15 +23,30 @@ for (var i = 0; i < buttons.length; i++) {
   });
 }
 
-// LOG VOTE COUNT
-var count = document.getElementById('vote-count');
+////////////////////////////////////////////// ADMIN VIEW
+
+// LOG VOTE COUNT ON ADMIN
+var adminVoteCount = document.getElementById('admin-vote-count');
+
+socket.on('adminVoteCount', function (votes) {
+  var votesToDisplay = "Vote Count:";
+  for (var vote in votes) {
+    votesToDisplay = votesToDisplay + ' ' + vote + ': ' + votes[vote] + ' ';
+  }
+  adminCount.innerText = votesToDisplay;
+});
+
+////////////////////////////////////////////// VOTER VIEW
+
+// LOG VOTE COUNT ON USER
+var userVoteCount = document.getElementById('vote-count');
 
 socket.on('voteCount', function (votes) {
   var votesToDisplay = "Vote Count:";
   for (var vote in votes) {
     votesToDisplay = votesToDisplay + ' ' + vote + ': ' + votes[vote] + ' ';
   }
-  count.innerText = votesToDisplay;
+  userVoteCount.innerText = votesToDisplay;
 });
 
 // EMIT THE INDV VOTE CAST BY USER
