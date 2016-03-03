@@ -1,9 +1,9 @@
 const http = require('http');
-const $ = require("jquery");
 const express = require('express');
 const app = express();
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
+const votes = {};
 
 // MAKE SURE SOCKET IO IS BELOW SERVER
 const socketIo = require('socket.io');
@@ -14,27 +14,19 @@ if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
 }
 
-// JADE
+// JADE & HTTP PARSER
 app.set('view engine', 'jade');
-
-// HTTP PARSER
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // SOCKET IO CONNECTIONS
-var votes = {};
-
 io.on('connection', function (socket) {
   console.log('A user has connected.', io.engine.clientsCount);
-
   // io.sockets.emit to all clients
   io.sockets.emit('usersConnected', io.engine.clientsCount);
-
   // socket.emit to only one client
   socket.emit('statusMessage', 'You have connected.');
-
-  socket.emit('voteCount', countVotes(votes));
 
   // count votes and show user what they chose
   socket.on('message', function (channel, message) {
@@ -51,24 +43,9 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function () {
     console.log('A user has disconnected.', io.engine.clientsCount);
     delete votes[socket.id];
-    socket.emit('voteCount', countVotes(votes));
     io.sockets.emit('userConnection', io.engine.clientsCount);
   });
 });
-
-// COUNT VOTES - REFACTOR w/LODASH
-function countVotes(votes) {
-  var voteCount = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0
-  };
-  for (var vote in votes) {
-    voteCount[votes[vote]]++
-  }
-  return voteCount;
-}
 
 // ROUTES
 app.get('/', (request, response) => {
@@ -88,11 +65,6 @@ app.get('/admin', (request, response) => {
 //   response.render('poll', { poll: poll });
 // });
 
-// app.get('/polls/:id', (request, response) => {
-//   var poll = app.locals.polls[request.params.id];
-//   response.render('poll', { poll: poll });
-// });
-//
 // app.post('/polls', (request, response) => {
 //   if (!request.body.poll) { return response.sendStatus(400); }
 //   var id = generateId();
@@ -100,6 +72,19 @@ app.get('/admin', (request, response) => {
 //   response.redirect('/polls/' + id);
 // });
 
+// COUNT VOTES - REFACTOR w/LODASH
+function countVotes(votes) {
+  var voteCount = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0
+  };
+  for (var vote in votes) {
+    voteCount[votes[vote]]++
+  }
+  return voteCount;
+}
 
 // ERROR HANDLING
 // development
@@ -112,7 +97,6 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
 // production
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
