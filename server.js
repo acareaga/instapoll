@@ -28,11 +28,14 @@ io.on('connection', function (socket) {
   // socket.emit to only one client
   socket.emit('statusMessage', 'You have connected.');
 
+  // NEED TO MAKE DYNAMIC FOR VOTERS TO SEE/UNSEE TALLY
+  socket.emit('voteCount', countVotes(votes));
+
   // count votes and show user what they chose
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
-      // NEED TO MAKE DYNAMIC FOR VOTERS TO SEE/UNSEE TALLY
+      // UPDATES TALLY WHEN NEW USERS VOTE
       socket.emit('voteCount', countVotes(votes));
       // emit to indv client the vote they cast
       socket.emit('myVoteCast', 'You voted for "' + message + '"');
