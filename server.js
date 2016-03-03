@@ -72,10 +72,18 @@ app.get('/', (request, response) => {
   response.render('index');
 });
 
-app.get('/polls/:id', (request, response) => {
-  var poll = app.locals.polls[request.params.id];
-  response.render('poll', { poll: poll });
+app.get('/vote', (request, response) => {
+  response.render('vote');
 });
+
+app.get('/admin', (request, response) => {
+  response.render('admin');
+});
+
+// app.get('/polls/:id', (request, response) => {
+//   var poll = app.locals.polls[request.params.id];
+//   response.render('poll', { poll: poll });
+// });
 
 // app.get('/polls/:id', (request, response) => {
 //   var poll = app.locals.polls[request.params.id];
@@ -88,5 +96,27 @@ app.get('/polls/:id', (request, response) => {
 //   app.locals.polls[id] = request.body.poll;
 //   response.redirect('/polls/' + id);
 // });
+
+
+// ERROR HANDLING
+// development
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
 module.exports = server;

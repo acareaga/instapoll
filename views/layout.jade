@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    title InstaPoll
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js')
+  main
+    body
+      header
+        nav.z-depth-0.navbar
+          .nav-wrapper.cyan.darken-2
+            a#navbar-branding.brand-logo.white-text.center(href='/') InstaPoll
+      .container.center
+      br
+      br
+      br
+      block content
+      br
+      br
+  footer.page-footer.cyan.darken-2
+  .footer-copyright
+    .container
+      a.white-text.text-lighten-4.left(href='https://github.com/acareaga', target='_blank') Made by Aaron Careaga
+      .white-text.text-lighten-4.right © 2016 INSTAPOLL
+  // Make sure your JS is at the bottom of the body!
+  script(src='/socket.io/socket.io.js')
+  script(src='/client.js')
