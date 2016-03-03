@@ -13,6 +13,31 @@ block content
         .input-field
           input#poll-response.validate(type='text')
           label Response
-        .input-field
-          button#create-link.btn.waves-effect.waves-light.cyan.darken-2.submit-button(type='submit', name='action') Create
         p
+    .row
+      .col.s12.m4.l2
+        p
+      .col.s12.m4.l4
+        p
+        h5 Active Poll
+        .switch
+          label
+            | Off
+            input(type='checkbox')
+            span.lever
+            |         On
+      .col.s12.m4.l4
+        p
+        h5 Anonymous Results
+        .switch
+          label
+            | Off
+            input(type='checkbox')
+            span.lever
+            |         On
+      .col.s12.m4.l2
+        p
+    br
+    br
+    .input-field
+      button#create-link.btn.waves-effect.waves-light.cyan.darken-2.submit-button(type='submit', name='action') Create

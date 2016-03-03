@@ -3,4 +3,41 @@ extends layout
 block content
   body
   .container.center
-    ADMIN ADMIN
+    #status-message
+    #connection-count
+    br
+    h5 Where do you want to eat lunch on Friday?
+    br
+    #choices
+      button A
+      button B
+      button C
+      button D
+    br
+    #my-vote
+    br
+    #vote-count
+    br
+  .row.center
+    .col.s12.m4.l2
+      p
+    .col.s12.m4.l4
+      p
+      h5 Active Poll
+      .switch
+        label
+          | Off
+          input(type='checkbox')
+          span.lever
+          |         On
+    .col.s12.m4.l4
+      p
+      h5 Anonymous Results
+      .switch
+        label
+          | Off
+          input(type='checkbox')
+          span.lever
+          |         On
+    .col.s12.m4.l2
+      p
