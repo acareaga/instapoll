@@ -34,8 +34,7 @@ io.on('connection', function (socket) {
   // socket.emit to only one client
   socket.emit('statusMessage', 'You have connected.');
 
-  // ADMIN VIEW VOTE COUNT
-  socket.emit('adminVoteCount', countVotes(votes));
+  socket.emit('voteCount', countVotes(votes));
 
   // count votes and show user what they chose
   socket.on('message', function (channel, message) {
