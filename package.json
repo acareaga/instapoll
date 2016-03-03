@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "P2P realtime feedback app built with Node, Express, jQuery, and Redis.",
   "main": "server.js",
+  "engines": {
+    "node": "5.6.0"
+  },
   "scripts": {
     "test": "mocha",
     "start": "node server.js"
@@ -37,7 +40,6 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "jquery": "2.2.1",
     "mocha": "2.4.5",
     "nodemon": "1.9.1",
     "request": "2.69.0"
