@@ -3,8 +3,15 @@ extends layout
 block content
   body
     .container.center
-        admin admin path: #{admin}
+        response #{poll.title}
         br
-        vote vote path: #{vote}
+        response #{poll.responses}
         br
-        poll: #{poll}
+        br
+        admin admin path: #{adminPath.adminPath}
+        br
+        vote vote path: #{votePath.votePath}
+        br
+        br
+        br
+        sha sha: #{poll.sha}

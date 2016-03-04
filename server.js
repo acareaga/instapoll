@@ -1,7 +1,7 @@
 const http = require('http');
 const express = require('express');
 const app = express();
-var path = require('path');
+const path = require('path');
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
 const votes = {};
@@ -30,21 +30,24 @@ app.get('/', (request, response) => {
 });
 
 app.post('/poll/', (request, response) => {
-  var sha = generateRoutes.sha();
+  var sha       = generateRoutes.sha();
+  var poll      = generatePoll.createPoll(sha, request.body)
   var adminPath = generateRoutes.adminPath(request);
-  var votePath = generateRoutes.votePath(request);
-  var poll = generatePoll.createPoll(sha, request.body)
+  var votePath  = generateRoutes.votePath(request);
+
+  console.log(votePath)
+  console.log(adminPath)
   // if (!request.body.poll) { return response.sendStatus(400); }
   response.render(__dirname + '/views/poll', {
-    admin: adminPath, vote: votePath, poll: poll
+    adminPath: adminPath, votePath: votePath, poll: poll
   });
 });
 
-app.get('/vote', (request, response) => {
+app.get('/vote/:id', (request, response) => {
   response.render(__dirname + '/views/vote');
 });
 
-app.get('/admin', (request, response) => {
+app.get('/admin/:id', (request, response) => {
   response.render(__dirname + '/views/admin');
 });
 
@@ -103,7 +106,6 @@ function countVotes(votes) {
 }
 
 // ERROR HANDLING
-// development
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -113,7 +115,7 @@ if (app.get('env') === 'development') {
     });
   });
 }
-// production
+
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
