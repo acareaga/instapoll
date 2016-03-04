@@ -1,41 +1,42 @@
 extends layout
 
 block content
-  body
-  .container.center
-    .row
-      .col.s12.m4.l2
-        p
-      .col.s12.m4.l8
-        .input-field
-          input#poll-title.validate(type='text')
-          label Title
-        .input-field
-          input#poll-response.validate(type='text')
-          label Response
-        .input-field
-          button#add-response.btn-small.waves-effect.waves-light.cyan.darken-2.right.submit-button(type='submit', name='action') +
-        p
-    .row
-      .col.s12.m4.l2
-        p
-      .col.s12.m4.l4
-        p
-        h5 Automatic Timeout
-        .input.datepicker(type='date')
-          label Date & Time
-      .col.s12.m4.l4
-        p
-        h5 Anonymous Results
-        .switch
-          label
-            | Off
-            input(type='checkbox')
-            span.lever
-            |         On
-      .col.s12.m4.l2
-        p
-    br
-    br
-    .input-field
-      button#create-link.btn-large.waves-effect.waves-light.cyan.darken-2.submit-button(type='submit', name='action') Create
+  body.center
+    .container.center
+      form.new-poll-form(action='/polls', method='post')
+        .row.center
+          .col.s12.m4.l2
+            p
+          .col.s12.m4.l8
+            .input-field
+              input#poll-title.validate(type='text')
+              label Title
+            .input-field
+              input#poll-response.validate(type='text')
+              label Response
+        .row.center
+          .input-field
+            #add-response.btn.waves-effect.waves-light.cyan.darken-2.right(type='', name='') +
+        .row.center
+          .col.s12.m4.l2
+            p
+          .col.s12.m4.l4
+            h5 Automatic Timeout
+            .input(type='date')
+              label Date & Time
+          .col.s12.m4.l4
+            p
+            h5 Anonymous Results
+            .switch
+              label
+                | Off
+                input(type='checkbox')
+                span.lever
+                | On
+          .col.s12.m4.l2
+            p
+        .row
+          br
+          br
+          .input-field
+            button#create-link.btn-large.waves-effect.waves-light.cyan.darken-2.submit-button(type='submit', name='action') Create

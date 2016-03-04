@@ -4,11 +4,14 @@ const app = express();
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
 const votes = {};
-
 // MAKE SURE SOCKET IO IS BELOW SERVER
 const socketIo = require('socket.io');
 const io = socketIo(server);
 const port = process.env.PORT || 3000;
+
+// create a new poll with custom routes
+const generateRoutes = require('./lib/generate-routes');
+const generatePoll = require('./lib/generate-poll');
 
 if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
@@ -22,12 +25,10 @@ app.use(express.static('public'));
 
 // SOCKET IO CONNECTIONS
 io.on('connection', function (socket) {
-  console.log('A user has connected.', io.engine.clientsCount);
-  // io.sockets.emit to all clients
   io.sockets.emit('usersConnected', io.engine.clientsCount);
+
   // socket.emit to only one client
   socket.emit('statusMessage', 'You have connected.');
-
   // NEED TO MAKE DYNAMIC FOR VOTERS TO SEE/UNSEE TALLY
   socket.emit('voteCount', countVotes(votes));
 
@@ -53,6 +54,19 @@ io.on('connection', function (socket) {
 // ROUTES
 app.get('/', (request, response) => {
   response.render('create');
+});
+
+app.post('/poll', (request, response) => {
+  if (!request.body.poll) { return response.sendStatus(400); }
+
+  var sha = generateRoutes.sha();
+  var adminPath = generateRoutes.adminPath(request);
+  var votePath = generateRoutes.votePath(request);
+  var poll = generatePoll.createPoll(sha, request.body)
+
+  response.render('/poll/' + sha, {
+    admin: adminPath, vote: votePath, poll: poll
+  });
 });
 
 app.get('/vote', (request, response) => {

@@ -22,13 +22,6 @@ var createButton = document.getElementById('create-link');
 
 
 
-
-
-
-
-
-
-
 // DATE PICKER
 // var dataPicker = document.getElementById('datepicker');
 //
