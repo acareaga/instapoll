@@ -11,17 +11,22 @@ socket.on('statusMessage', function (message) {
 });
 
 // Capture Poll Title, append to Vote and Admin Page
-const $pollTitle = document.getElementById('poll-title');
+const $pollTitle = $('.poll-title');
+const $anonymousResultsButton = $('.anonymous-results');
 
 // Capture Response collection, append to Vote and Admin Page
 const $responseList = $('.response-list');
 const $addResponse = $('.add-response');
-
+// ADD RESPONSE BUTTON
 $addResponse.click(event, function() {
   $responseList.append(
     `<input type="text" id="poll-response" class="form-control">`
-  )
+  );
 });
+
+$anonymousResultsButton.click(event, function() {
+  console.log('NEED TO HIDE THE VOTE COUNT')
+})
 
 
 

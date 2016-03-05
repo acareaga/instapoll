@@ -1,5 +1,7 @@
 var socket = io();
 
+const $closePoll = $('.close-poll')
+
 // LOG VOTE COUNT ON ADMIN -- NEED TO UPDATE AUTOMATICALLY!
 var count = document.getElementById('vote-count');
 

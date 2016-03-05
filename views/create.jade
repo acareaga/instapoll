@@ -9,10 +9,10 @@ block content
             p
           .col.s12.m4.l8
             .input-field
-              input#poll-title.validate(type='text', name="title")
+              input.poll-title.validate(type='text', name="title")
               label Title
             .input-field.response-list
-              input#poll-response.validate(type='text', name="response")
+              input.poll-response.validate(type='text', name="response")
               label Responses
         .row.center
           .input-field
@@ -31,7 +31,7 @@ block content
               label
                 | Off
                 input(type='checkbox')
-                span.lever
+                span.lever.anonymous-results
                 | On
           .col.s12.m4.l2
             p
