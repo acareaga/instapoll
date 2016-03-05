@@ -1,3 +1,6 @@
+/*jshint -W104 */
+/*jshint -W119 */
+
 var socket = io();
 
 // socket.emit to only one client, message below
@@ -8,16 +11,24 @@ socket.on('statusMessage', function (message) {
 });
 
 // Capture Poll Title, append to Vote and Admin Page
-var pollTitle = document.getElementById('poll-title');
+const $pollTitle = document.getElementById('poll-title');
 
 // Capture Response collection, append to Vote and Admin Page
-var responses = document.getElementById('poll-response');
+const $responseList = $('.response-list');
+const $addResponse = $('.add-response');
 
-// Shovel New Response into the Responses collection
-var addResponse = document.getElementById('add-response');
+$addResponse.click(event, function() {
+  $responseList.append(
+    `<input type="text" id="poll-response" class="form-control">`
+  )
+});
+
+
+
+
 
 // On Create, pass Title into generator for routes and Append to Root
-var createButton = document.getElementById('create-link');
+const $createButton = document.getElementById('create-link');
 
 
 

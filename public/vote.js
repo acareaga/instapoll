@@ -1,3 +1,6 @@
+/*jshint -W104 */
+/*jshint -W119 */
+
 var socket = io();
 
 // CHOICES FOR BUTTONS
