@@ -3,15 +3,12 @@ extends layout
 block content
   body
     .container.center
-        response #{poll.title}
+      .col.s12.m4.l2
+        p
+        h3 #{poll.title}
         br
-        response #{poll.responses}
+        p Admin Dashboard:
+        a(href=poll.adminPath) #{poll.adminPath}
         br
-        br
-        admin admin path: #{adminPath.adminPath}
-        br
-        vote vote path: #{votePath.votePath}
-        br
-        br
-        br
-        sha sha: #{poll.sha}
+        p Voter Poll:
+        a(href=poll.votePath) #{poll.votePath}

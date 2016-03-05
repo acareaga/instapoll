@@ -3,16 +3,10 @@
 
 var socket = io();
 
-// socket.emit to only one client, message below
-var statusMessage = document.getElementById('status-message');
-
-socket.on('statusMessage', function (message) {
-  statusMessage.innerText = message;
-});
-
 // Capture Poll Title, append to Vote and Admin Page
 const $pollTitle = $('.poll-title');
 const $anonymousResultsButton = $('.anonymous-results');
+const $createButton = $('#create-link');
 
 // Capture Response collection, append to Vote and Admin Page
 const $responseList = $('.response-list');
@@ -25,16 +19,8 @@ $addResponse.click(event, function() {
 });
 
 $anonymousResultsButton.click(event, function() {
-  console.log('NEED TO HIDE THE VOTE COUNT')
-})
-
-
-
-
-
-// On Create, pass Title into generator for routes and Append to Root
-const $createButton = document.getElementById('create-link');
-
+  console.log('NEED TO HIDE THE VOTE COUNT');
+});
 
 
 

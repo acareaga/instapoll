@@ -1,12 +1,17 @@
+/*jshint -W104 */
+/*jshint -W119 */
+
 const http = require('http');
 const express = require('express');
 const app = express();
 const path = require('path');
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
-const votes = {};
 const generateRoutes = require('./lib/generate-routes');
-const generatePoll = require('./lib/generate-poll');
+// const generatePoll = require('./lib/generate-poll');
+
+const Poll = require('./lib/poll');
+const votes = {};
 
 // MAKE SURE SOCKET IO IS BELOW SERVER
 const socketIo = require('socket.io');
@@ -29,26 +34,29 @@ app.get('/', (request, response) => {
   response.render(__dirname + '/views/create');
 });
 
-app.post('/poll/', (request, response) => {
-  var sha       = generateRoutes.sha();
-  var poll      = generatePoll.createPoll(sha, request.body)
+app.post('/poll', (request, response) => {
+  // if (!request.body.poll) { return response.sendStatus(400); }
+  var voteId    = generateRoutes.voteId();
+  var adminId   = generateRoutes.adminId();
   var adminPath = generateRoutes.adminPath(request);
   var votePath  = generateRoutes.votePath(request);
+  var poll      = new Poll(voteId, request.body, adminId, adminPath, votePath);
 
-  console.log(votePath)
-  console.log(adminPath)
-  // if (!request.body.poll) { return response.sendStatus(400); }
+  console.log(adminPath);
+  console.log(votePath);
+  console.log(poll);
+
   response.render(__dirname + '/views/poll', {
-    adminPath: adminPath, votePath: votePath, poll: poll
+    poll: poll
   });
-});
-
-app.get('/vote/:id', (request, response) => {
-  response.render(__dirname + '/views/vote');
 });
 
 app.get('/admin/:id', (request, response) => {
   response.render(__dirname + '/views/admin');
+});
+
+app.get('/vote/:id', (request, response) => {
+  response.render(__dirname + '/views/vote');
 });
 
 // app.get('/polls/:id', (request, response) => {
@@ -70,14 +78,14 @@ io.on('connection', function (socket) {
   // socket.emit to only one client
   socket.emit('statusMessage', 'You have connected.');
   // NEED TO MAKE DYNAMIC FOR VOTERS TO SEE/UNSEE TALLY
-  socket.emit('voteCount', countVotes(votes));
+  socket.emit('voteCount', Poll.prototype.countVotes());
 
   // count votes and show user what they chose
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
       // UPDATES TALLY WHEN NEW USERS VOTE
-      socket.emit('voteCount', countVotes(votes));
+      socket.emit('voteCount', Poll.prototype.countVotes());
       // emit to indv client the vote they cast
       socket.emit('myVoteCast', 'You voted for "' + message + '"');
     }
@@ -90,20 +98,6 @@ io.on('connection', function (socket) {
     io.sockets.emit('userConnection', io.engine.clientsCount);
   });
 });
-
-// COUNT VOTES - REFACTOR w/LODASH
-function countVotes(votes) {
-  var voteCount = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0
-  };
-  for (var vote in votes) {
-    voteCount[votes[vote]]++
-  }
-  return voteCount;
-}
 
 // ERROR HANDLING
 if (app.get('env') === 'development') {
