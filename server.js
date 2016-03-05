@@ -13,7 +13,7 @@ const io = socketIo(server);
 const port = process.env.PORT || 3000;
 
 const generateRoutes = require('./lib/generate-routes');
-const Poll = require('./lib/poll');
+const Poll = require('./lib/generate-poll');
 const votes = {};
 
 if (!module.parent) {
@@ -39,6 +39,8 @@ app.post('/poll', (request, response) => {
   var votePath  = generateRoutes.votePath(request);
   var poll      = new Poll(id, request.body, adminId, adminPath, votePath);
 
+  console.log(request.body.poll.title)
+
   app.locals.polls[id] = poll;
   response.render(__dirname + '/views/poll', {
     poll: poll
@@ -47,6 +49,7 @@ app.post('/poll', (request, response) => {
 
 app.get('/admin/:id/:adminId', (request, response) => {
   var poll = app.locals.polls[request.params.id];
+  console.log(poll)
   response.render(__dirname + '/views/admin', {
     poll: poll
   });

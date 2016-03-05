@@ -7,13 +7,13 @@ block content
         .row.center
           .col.s12.m4.l2
             p
-          .col.s12.m4.l8
+          .col.s12.m4.l8.response-list
             .input-field
-              input.poll-title.validate(type='text', name="title")
-              label Title
-            .input-field.response-list
-              input.poll-response.validate(type='text', name="response")
-              label Responses
+              input.poll-title.validate(type='text', name='poll[title]', placeholder='Title')
+            .input-field
+              input.poll-response.validate(type='text', name='poll[responses][]', placeholder='Response')
+            .input-field
+              input.poll-response.validate(type='text', name='poll[responses][]', placeholder='Response')
         .row.center
           .input-field
             .add-response.btn.waves-effect.waves-light.cyan.darken-2.right(type='', name='') +
@@ -22,8 +22,7 @@ block content
             p
           .col.s12.m4.l4
             h5 Automatic Timeout
-            .input(type='date')
-              label Date & Time
+            .input.datepicker(type='date')
           .col.s12.m4.l4
             p
             h5 Anonymous Results
