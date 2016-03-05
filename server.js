@@ -8,8 +8,6 @@ const path = require('path');
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
 const generateRoutes = require('./lib/generate-routes');
-// const generatePoll = require('./lib/generate-poll');
-
 const Poll = require('./lib/poll');
 const votes = {};
 
@@ -26,37 +24,41 @@ if (!module.parent) {
 app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static(path.join(__dirname, 'public')));
+app.locals.polls = {};
 
-// ROUTES
+////////////////////////////////////////////////////////////// ROUTES
 app.get('/', (request, response) => {
   response.render(__dirname + '/views/create');
 });
 
 app.post('/poll', (request, response) => {
   // if (!request.body.poll) { return response.sendStatus(400); }
-  var voteId    = generateRoutes.voteId();
+  var id        = generateRoutes.id();
   var adminId   = generateRoutes.adminId();
   var adminPath = generateRoutes.adminPath(request);
   var votePath  = generateRoutes.votePath(request);
-  var poll      = new Poll(voteId, request.body, adminId, adminPath, votePath);
+  var poll      = new Poll(id, request.body, adminId, adminPath, votePath);
 
-  console.log(adminPath);
-  console.log(votePath);
-  console.log(poll);
+  app.locals.polls[id] = poll;
 
   response.render(__dirname + '/views/poll', {
     poll: poll
   });
 });
 
-app.get('/admin/:id', (request, response) => {
-  response.render(__dirname + '/views/admin');
+app.get('/admin/:id/:adminId', (request, response) => {
+  var poll = app.locals.polls[request.params.id];
+  response.render(__dirname + '/views/admin', {
+    poll: poll
+  });
 });
 
 app.get('/vote/:id', (request, response) => {
-  response.render(__dirname + '/views/vote');
+  var poll = app.locals.polls[request.params.id];
+  response.render(__dirname + '/views/vote', {
+    poll: poll
+  });
 });
 
 // app.get('/polls/:id', (request, response) => {
