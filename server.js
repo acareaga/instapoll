@@ -2,17 +2,19 @@
 /*jshint -W119 */
 
 const http = require('http');
+const path = require('path');
 const express = require('express');
 const app = express();
-const path = require('path');
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
-const generateRoutes = require('./lib/generate-routes');
-const Poll = require('./lib/poll');
-const votes = {};
+
 const socketIo = require('socket.io');
 const io = socketIo(server);
 const port = process.env.PORT || 3000;
+
+const generateRoutes = require('./lib/generate-routes');
+const Poll = require('./lib/poll');
+const votes = {};
 
 if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
