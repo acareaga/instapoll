@@ -22,9 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.polls = {};
-app.locals.votes = {};
 
-////////////////////////////////////////////////////////////// ROUTES
+//////////////////////////////////////////////////////////////// ROUTES
 app.get('/', (request, response) => {
   response.render(__dirname + '/views/create');
 });
@@ -50,7 +49,7 @@ app.get('/vote/:id', (request, response) => {
   response.render(__dirname + '/views/vote', { poll: poll });
 });
 
-/////////////////////////////////////////////////////// SOCKET IO CONNECTIONS
+////////////////////////////////////////////////////////////// IO CONNECTIONS
 io.on('connection', function (socket) {
   io.sockets.emit('usersConnected', io.engine.clientsCount);
   socket.emit('statusMessage', 'You have connected.');
@@ -58,7 +57,7 @@ io.on('connection', function (socket) {
   socket.on('message', function (channel, message) {
     var poll = app.locals.polls[message.id];
     if (channel === 'voteCast') {
-      poll.votes.push(message);
+      poll.responses[socket.id] = message;
       socket.emit('voteCount', poll.countVotes());
       socket.emit('myVoteCast', 'You voted for "' + message + '"');
     }
@@ -70,7 +69,6 @@ io.on('connection', function (socket) {
     io.sockets.emit('userConnection', io.engine.clientsCount);
   });
 });
-
 
 ///////////////////////////////////////////////////////////// ERROR HANDLING
 if (app.get('env') === 'development') {
