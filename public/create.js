@@ -23,9 +23,7 @@ $anonymousResultsButton.click(event, function() {
 });
 
 // DATE PICKER
-const $dataPicker = $('.datepicker');
-
-$datePicker.pickadate({
-  selectMonths: true, // Creates a dropdown to control month
-  selectYears: 15 // Creates a dropdown of 15 years to control year
-});
+$('.datepicker').pickadate({
+    selectMonths: true,
+    selectYears: 15,
+    format: 'dd-mm-yyyy' });

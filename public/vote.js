@@ -2,29 +2,31 @@
 /*jshint -W119 */
 
 var socket = io();
+var pollId = window.location.pathname.split('/')[2];
 
 // CHOICES FOR BUTTONS
-var buttons = document.querySelectorAll('#choices button');
+var buttons = $('#choices input');
 for (var i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener('click', function () {
-    socket.send('voteCast', this.innerText);
+    console.log(this.value);
+    socket.send('voteCast', this.value);
   });
 }
 
 // socket.emit to only one client, message below
-var statusMessage = document.getElementById('status-message');
-socket.on('statusMessage', function (message) {
-  statusMessage.innerText = message;
-});
+// var statusMessage = $('#status-message');
+// socket.on('statusMessage', function (message) {
+//   statusMessage.innerText = message;
+// });
 
 // EMIT THE INDV VOTE CAST BY USER
-var myVote = document.getElementById('my-vote');
+var myVote = $('#my-vote');
 socket.on('myVoteCast', function (vote) {
   myVote.innerText = vote;
 });
 
 // LOG VOTE COUNT ON USER -- NEED TO MAKE DYNAMIC
-var count = document.getElementById('vote-count');
+var count = $('#vote-count');
 socket.on('voteCount', function (votes) {
   var votesToDisplay = "Vote Count:";
   for (var vote in votes) {

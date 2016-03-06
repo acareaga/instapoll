@@ -5,14 +5,12 @@ block content
   .container.center
     h3 #{poll.title}
     #status-message
-    h5#choices
-      button A
-      br
-      button B
-      br
-      button C
-      br
-      button D
     h5#my-vote
-    h5#vote-count
+    h5#choices
+      each response in poll.responses
+        input(type="button", name="#{response}-votes" value="#{response}").btn
+        br
+        br
+  .container
+    h3#vote-count
     br

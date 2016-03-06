@@ -5,9 +5,19 @@ block content
   .container.center
     h3 #{poll.title}
     #connection-count
-    br
     h5#vote-count
-    br
+    table.centered.bordered
+      thead
+        tr
+          th(data-field='id') Response
+          th(data-field='name') Vote Count
+      each response in poll.responses
+        tbody
+          tr
+            td #{response}
+            td #{response.count}
+      br
+      br
   .row.center
     .col.s12.m4.l2
       p
