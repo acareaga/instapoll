@@ -13,6 +13,8 @@ const port = process.env.PORT || 3000;
 const generateRoutes = require('./lib/generate-routes');
 const Poll = require('./lib/generate-poll');
 
+const locus = require('locus')
+
 if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
 }
@@ -36,12 +38,18 @@ app.get('/', (request, response) => {
 });
 
 app.post('/poll', (request, response) => {
-  var id        = generateRoutes.id();
-  var adminId   = generateRoutes.adminId();
-  var adminPath = generateRoutes.adminPath(request);
-  var votePath  = generateRoutes.votePath(request);
-  var poll      = new Poll(id, request.body, adminId, adminPath, votePath);
+  var id          = generateRoutes.id();
+  var adminId     = generateRoutes.adminId();
+  var adminPath   = generateRoutes.adminPath(request);
+  var votePath    = generateRoutes.votePath(request);
+  var pollChoices = {};
+  var active      = true;
+  var poll        = new Poll(id, request.body, adminId, adminPath, votePath, active, pollChoices);
   app.locals.polls[id] = poll;
+
+  var newPoll = poll.responses.forEach( function(choice){
+    return pollChoices[choice.trim()] = 0;
+  });
 
   response.render(__dirname + '/views/poll', { poll: poll });
 });
@@ -58,12 +66,12 @@ app.get('/vote/:id', (request, response) => {
 
 ////////////////////////////////////////////////////////////// IO CONNECTIONS
 io.on('connection', function (socket) {
+  var userVotes = {};
+
   socket.on('message', function (channel, message, pollId) {
     if (channel === 'voteCast') {
-      var poll = app.locals.polls[pollId];
-      console.log(message.response);
-      poll.votes.push(message.response);
-      socket.emit('voteCount', poll.countVotes());
+      userVotes[socket.id] = message;
+      socket.emit('voteCount', countVotes(userVotes, pollId));
       socket.emit('myVoteCast', 'You voted for "' + message + '"');
     }
   });
@@ -73,5 +81,18 @@ io.on('connection', function (socket) {
     io.sockets.emit('userConnection', io.engine.clientsCount);
   });
 });
+
+///////////////////////////////////////////////////////// MOVE TO FUNCTION
+function countVotes(userVotes, pollId) {
+  var voteCount = app.locals.polls[pollId].pollChoices;
+  for (var vote in userVotes) {
+    if (userVotes[vote]) {
+      voteCount[userVotes[vote]]++;
+    } else {
+      voteCount[userVotes[vote]] = 1;
+    }
+  }
+  return voteCount;
+}
 
 module.exports = server;
