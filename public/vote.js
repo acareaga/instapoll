@@ -9,7 +9,7 @@ var buttons = $('#choices input');
 for (var i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener('click', function () {
     console.log(this.value);
-    socket.send('voteCast', this.value);
+    socket.send('voteCast', this.value, pollId);
   });
 }
 
@@ -20,10 +20,10 @@ for (var i = 0; i < buttons.length; i++) {
 // });
 
 // EMIT THE INDV VOTE CAST BY USER
-var myVote = $('#my-vote');
-socket.on('myVoteCast', function (vote) {
-  myVote.innerText = vote;
-});
+// var myVote = $('#my-vote');
+// socket.on('myVoteCast', function (vote) {
+//   myVote.innerText = vote;
+// });
 
 // LOG VOTE COUNT ON USER -- NEED TO MAKE DYNAMIC
 var count = $('#vote-count');
@@ -33,4 +33,27 @@ socket.on('voteCount', function (votes) {
     votesToDisplay = votesToDisplay + ' ' + vote + ': ' + votes[vote] + ' ';
   }
   count.innerText = votesToDisplay;
+});
+
+
+//////////////////////////////////////////////// ADMIN VIEW
+
+const $closePoll = $('.close-poll')
+
+// LOG VOTE COUNT ON ADMIN -- NEED TO UPDATE AUTOMATICALLY!
+var count = document.getElementById('vote-count');
+
+socket.on('voteCount', function (votes) {
+  var votesToDisplay = "Vote Count:";
+  for (var vote in votes) {
+    votesToDisplay = votesToDisplay + ' ' + vote + ': ' + votes[vote] + ' ';
+  }
+  count.innerText = votesToDisplay;
+});
+
+// EMIT THE NUMBER OF USERS CONNECTED
+var connectionCount = document.getElementById('connection-count');
+
+socket.on('usersConnected', function (count) {
+  connectionCount.innerText = 'Connected Users: ' + count;
 });

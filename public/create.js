@@ -1,7 +1,7 @@
 /*jshint -W104 */
 /*jshint -W119 */
 
-const socket = io();
+// const socket = io();
 
 const $pollTitle = $('.poll-title');
 const $anonymousResultsButton = $('.anonymous-results');

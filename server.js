@@ -23,6 +23,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.polls = {};
 
+// 1. Verify that the client side is behaving correctly by debuggering and console.loging
+// 2. If issue in the server, add a really simple Mocha test on the Poll object
+// I helped Jill set one up, if you want a template - looks like you have mocha in here already
+// 3. Tally or Add to the votes on the server side - like, have the client emit the vote back to the server
+// 4. Handle adding up the votes in the  server so you can test it
+// - by console.log’n what you get in and using that as ‘fixture’ data for the tests
+
 //////////////////////////////////////////////////////////////// ROUTES
 app.get('/', (request, response) => {
   response.render(__dirname + '/views/create');
@@ -51,13 +58,11 @@ app.get('/vote/:id', (request, response) => {
 
 ////////////////////////////////////////////////////////////// IO CONNECTIONS
 io.on('connection', function (socket) {
-  io.sockets.emit('usersConnected', io.engine.clientsCount);
-  socket.emit('statusMessage', 'You have connected.');
-
-  socket.on('message', function (channel, message) {
-    var poll = app.locals.polls[message.id];
+  socket.on('message', function (channel, message, pollId) {
     if (channel === 'voteCast') {
-      poll.responses[socket.id] = message;
+      var poll = app.locals.polls[pollId];
+      console.log(message.response);
+      poll.votes.push(message.response);
       socket.emit('voteCount', poll.countVotes());
       socket.emit('myVoteCast', 'You voted for "' + message + '"');
     }
@@ -65,27 +70,7 @@ io.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     console.log('A user has disconnected.', io.engine.clientsCount);
-    delete app.locals.votes[socket.id];
     io.sockets.emit('userConnection', io.engine.clientsCount);
-  });
-});
-
-///////////////////////////////////////////////////////////// ERROR HANDLING
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
   });
 });
 
