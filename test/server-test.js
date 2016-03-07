@@ -1,11 +1,15 @@
 /*jshint -W104 */
 /*jshint -W119 */
 /*jshint -W097 */
+/*jshint -W117 */
+'use strict';
 
 const assert = require('chai').assert;
 const request = require('request');
 const app = require('../server');
 const fixtures = require('./fixtures');
+const Poll = require('../lib/generate-poll');
+const Routes = require('../lib/generate-routes');
 
 describe('Server', () => {
 
@@ -37,6 +41,17 @@ describe('Server', () => {
         done();
       });
     });
+
+  it('should have a body with the name of the application', (done) => {
+     let title = app.locals.title;
+
+     this.request.get('/', (error, response) => {
+       if (error) { done(error); }
+       assert(response.body.includes(title),
+             `"${response.body} does not include ${title}"`);
+       done();
+     });
+   });
   });
 
   describe('GET /vote/:id', () => {
@@ -67,7 +82,6 @@ describe('Server', () => {
         done();
       });
     });
-
   });
 
   describe('GET /admin/:id/:adminId', () => {
@@ -94,6 +108,5 @@ describe('Server', () => {
         done();
       });
     });
-
   });
 });
