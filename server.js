@@ -37,8 +37,9 @@ app.post('/poll', (request, response) => {
   var votePath    = generateRoutes.votePath(request);
   var pollChoices = {};
   var active      = true;
+  var anonymous   = false;
   var poll        = new Poll(id, request.body, adminId, adminPath,
-                             votePath, active, pollChoices);
+                             votePath, active, pollChoices, anonymous);
 
   app.locals.polls[id] = poll;
 
@@ -82,9 +83,9 @@ io.on('connection', function (socket) {
     }
   });
 
-  socket.on('message', function (channel) {
+  socket.on('message', function (channel, pollId) {
     if (channel === 'anonymousResults') {
-      socket.emit('hideVoteResults');
+      anonymousPoll(pollId);
     }
   });
 
@@ -133,6 +134,10 @@ function countVotes(userVotes, pollId) {
 
 function closePoll(pollId) {
   app.locals.polls[pollId].active = false;
+}
+
+function anonymousPoll(pollId) {
+  app.locals.polls[pollId].anonymous = true;
 }
 
 module.exports = server;

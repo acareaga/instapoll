@@ -16,7 +16,10 @@ block content
           br
           h5 This poll has closed.
     .container.center
-      h5#my-vote
-      br
+      if poll.anonymous === false
+        h5#my-vote
+        br
+      else
+        br
       h4#vote-count
       br
