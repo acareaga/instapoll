@@ -4,6 +4,6 @@ var assert = require('chai').assert;
 describe('Generate Routes', function() {
 
   xit('creates valid route', function() {
-    assert.typeOf(poll, 'hash');
+    assert.typeOf(poll, 'object');
   });
 });
