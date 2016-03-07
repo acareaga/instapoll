@@ -1,9 +1,9 @@
 exports.validPoll = {
-  id: 'b8fc72a82dc906bfdb51',
-  title: 'Lunch on Friday',
-  responses: [ 'Chipolte', 'Red Robin', 'The Vault', 'Rio' ],
-  adminPath: 'http://localhost:3000/admin/b8fc72a82dc906bfdb51/d5be21642a',
-  votePath: 'http://localhost:3000/vote/b8fc72a82dc906bfdb51',
+  id: 'ef583188a91f3aface14',
+  title: 'Breakfast at Turing',
+  responses: [ 'Ink Coffee', 'Starbucks', 'McD\'s' ],
+  adminPath: 'http://localhost:3000/admin/ef583188a91f3aface14/adc8b407a3',
+  votePath: 'http://localhost:3000/vote/ef583188a91f3aface14',
   active: true,
-  pollChoices: { 'Chipolte': 1, 'Red Robin': 0, 'The Vault': 0, 'Rio': 0 },
+  pollChoices: { 'Ink Coffee': 0, Starbucks: 0, 'McD\'s': 0 }
 };

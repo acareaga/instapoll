@@ -56,20 +56,24 @@ describe('Server', () => {
   describe('POST /poll', () => {
 
     xit('should not return 404', (done) => {
-      this.request.post('/poll', { form: validPollData }, (error, response) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
         assert.notEqual(response.statusCode, 404);
         done();
       });
     });
 
-    xit('should return a page that has the title of the poll', (done) => {
+    xit('should return a page that has the title, adminPath, and votePath of the poll', (done) => {
       var poll = validPoll;
 
-      this.request.post('/poll', { form: validPollData }, (error, response) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
         assert(response.body.includes(poll.title),
                `"${response.body}" does not include "${poll.title}".`);
+        assert(response.body.includes(poll.adminPath),
+              `"${response.body}" does not include "${poll.adminPath}".`);
+        assert(response.body.includes(poll.votePath),
+               `"${response.body}" does not include "${poll.votePath}".`);
         done();
       });
     });
@@ -78,7 +82,7 @@ describe('Server', () => {
   describe('GET /vote/:id', () => {
 
     xit('should return a 200', (done) => {
-      this.request.post('/poll', { form: pollData }, (error, response) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
 
         var poll = validPoll;
@@ -92,7 +96,7 @@ describe('Server', () => {
     });
 
     xit('should not return 404', (done) => {
-      this.request.post('/poll', { form: pollData }, (error, response) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
 
         var poll = validPoll;
@@ -105,16 +109,18 @@ describe('Server', () => {
       });
     });
 
-    xit('should return a page that has the title of the poll', (done) => {
-      this.request.post('/poll', { form: pollData }, (error, response) => {
+    xit('should return a page that has the title and response buttons of the poll', (done) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
 
         var poll = validPoll;
 
         this.request.get('/vote/${poll.id}', (error, response) => {
           if (error) { done(error); }
-          assert(response.body.includes(poll.name),
+          assert(response.body.includes(poll.title),
                  `"${response.body}" does not include "${poll.title}".`);
+          assert(response.body.includes(poll.responses),
+                `"${response.body}" does not include "${poll.responses}".`);
           done();
         });
       });
@@ -123,7 +129,7 @@ describe('Server', () => {
   describe('GET /admin/:id/:adminId', () => {
 
     xit('should not return 404', (done) => {
-      this.request.post('/poll', { form: pollData }, (error, response) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
 
         var poll = validPoll;
@@ -136,16 +142,18 @@ describe('Server', () => {
       });
     });
 
-    xit('should return a page that has the title of the poll', (done) => {
-      this.request.post('/poll', { form: pollData }, (error, response) => {
+    xit('should return a page that has the title and vote count of the poll', (done) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
 
         var poll = validPoll;
 
         this.request.get('/admin/${poll.id}/${poll.adminId}', (error, response) => {
           if (error) { done(error); }
-          assert(response.body.includes(poll.name),
-                 `"${response.body}" does not include "${poll.name}".`);
+          assert(response.body.includes(poll.title),
+                 `"${response.body}" does not include "${poll.title}".`);
+         assert(response.body.includes(poll.pollChoices),
+                `"${response.body}" does not include "${poll.pollChoices}".`);
           done();
           });
         });
