@@ -1,4 +1,4 @@
 exports.validPoll = {
-  name: 'Lunch on Tuesday',
-  options: [ 'Mexican', 'Sushi', 'Pizza', 'Beer' ]
+  title: 'Lunch on Friday',
+  responses: [ 'Chipolte', 'Red Robin', 'The Vault', 'Rio' ]
 };
