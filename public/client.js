@@ -3,7 +3,6 @@
 /*jshint -W117 */
 /*jshint -W097 */
 /*jshint -W083 */
-
 'use strict';
 
 var socket = io();

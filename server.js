@@ -14,8 +14,6 @@ const port = process.env.PORT || 3000;
 const generateRoutes = require('./lib/generate-routes');
 const Poll = require('./lib/generate-poll');
 
-// const locus = require('locus');
-
 if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
 }
