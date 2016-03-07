@@ -72,16 +72,15 @@ $addResponse.click(event, function() {
 $closePollButton.click(event, function() {
   socket.send('closePoll', pollId);
 });
-///////////////////////////////////////////////////////////
+
 $anonymousResultsButton.click(event, function() {
   console.log('ANONYMOUS - HIDE THE VOTE COUNT');
   socket.send('anonymousResults', pollId);
 });
 
-////////////////////////////////////////////////// TIMEOUT
 $createButton.click(event, function() {
-  console.log("CREATE CLICKED CLICKED");
+  console.log("CREATE CLICKED - TIMEOUT");
   var date = $timeoutDate;
   var time = $timeoutTime;
-  socket.send('pollTimeout', pollId, date, time);
+  socket.send('pollTimeout', pollId, time);
 });

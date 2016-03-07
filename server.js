@@ -26,7 +26,6 @@ app.locals.title = 'InstaPoll';
 app.locals.polls = {};
 
 //////////////////////////////////////////////////////////////// ROUTES
-
 app.get('/', (request, response) => {
   response.render(__dirname + '/views/create');
 });
@@ -38,7 +37,9 @@ app.post('/poll', (request, response) => {
   var votePath    = generateRoutes.votePath(request);
   var pollChoices = {};
   var active      = true;
-  var poll        = new Poll(id, request.body, adminId, adminPath, votePath, active, pollChoices);
+  var poll        = new Poll(id, request.body, adminId, adminPath,
+                             votePath, active, pollChoices);
+
   app.locals.polls[id] = poll;
 
   var newPoll = poll.responses.forEach( function(choice){
@@ -75,14 +76,12 @@ io.on('connection', function (socket) {
     if (channel === 'closePoll') { closePoll(pollId); }
   });
 
-  // TIMEOUT ON DATE
   socket.on('message', function (channel, pollId, timeout) {
     if (channel === 'pollTimeout') {
       setTimeout(closePoll(pollId), timeout);
     }
   });
 
-  // ANONYMOUS RESULTS
   socket.on('message', function (channel) {
     if (channel === 'anonymousResults') {
       socket.emit('hideVoteResults');
@@ -94,22 +93,6 @@ io.on('connection', function (socket) {
     io.sockets.emit('userConnection', io.engine.clientsCount);
   });
 });
-
-function countVotes(userVotes, pollId) {
-  var voteCount = app.locals.polls[pollId].pollChoices;
-  for (var vote in userVotes) {
-    if (userVotes[vote]) {
-      voteCount[userVotes[vote]]++;
-    } else {
-      voteCount[userVotes[vote]] = 1;
-    }
-  }
-  return voteCount;
-}
-
-function closePoll(pollId) {
-  app.locals.polls[pollId].active = false;
-}
 
 //////////////////////////////////////////////////////////////// ERROR HANDLING
 app.use(function(req, res, next) {
@@ -135,5 +118,21 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+function countVotes(userVotes, pollId) {
+  var voteCount = app.locals.polls[pollId].pollChoices;
+  for (var vote in userVotes) {
+    if (userVotes[vote]) {
+      voteCount[userVotes[vote]]++;
+    } else {
+      voteCount[userVotes[vote]] = 1;
+    }
+  }
+  return voteCount;
+}
+
+function closePoll(pollId) {
+  app.locals.polls[pollId].active = false;
+}
 
 module.exports = server;

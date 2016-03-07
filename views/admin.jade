@@ -6,7 +6,6 @@ block content
     h3 #{poll.title}
     p
     #connection-count
-    h5#admin-vote-count
     table.centered.bordered
       thead
         tr
@@ -16,7 +15,7 @@ block content
         tbody
           tr
             td #{response}
-            td #{response.count}
+            td#vote-count
       br
       br
   .row.center
