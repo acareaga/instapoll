@@ -14,6 +14,8 @@ const port = process.env.PORT || 3000;
 const generateRoutes = require('./lib/generate-routes');
 const Poll = require('./lib/generate-poll');
 
+const locus = require('locus');
+
 if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
 }
@@ -60,11 +62,18 @@ app.get('/vote/:id', (request, response) => {
 io.on('connection', function (socket) {
   var userVotes = {};
   io.sockets.emit('usersConnected', io.engine.clientsCount);
+
   socket.on('message', function (channel, message, pollId) {
     if (channel === 'voteCast') {
       userVotes[socket.id] = message;
       socket.emit('voteCount', countVotes(userVotes, pollId));
       socket.emit('myVoteCast', 'You voted for "' + message + '"');
+    }
+  });
+
+  socket.on('message', function (channel, pollId) {
+    if (channel === 'closePoll'){
+      app.locals.polls[pollId].active = false;
     }
   });
 

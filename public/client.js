@@ -24,16 +24,6 @@ for (var i = 0; i < buttons.length; i++) {
   });
 }
 
-{/*<div id="choices">
-    <%if(votes.active === true) { %>
-      <% votes.choices.forEach(function(vote){ %>
-          <button><%= vote %> </button>
-      <% }) %>
-  <% } else { %>
-      <h1> voting is now closed fam <h1>
-  <% } %>
-</div>*/}
-
 // DISPLAY USER CHOICE ON VOTE
 var myVote = $('#my-vote');
 var responseButtons = $('#choices');
@@ -76,12 +66,12 @@ $addResponse.click(event, function() {
 });
 
 $anonymousResultsButton.click(event, function() {
-  console.log('ANON - HIDE THE VOTE COUNT');
+  console.log('ANONYMOUS - HIDE THE VOTE COUNT');
 });
 
 $closePollButton.click(event, function() {
   console.log("POLL CLOSE SWITCH");
-  socket.send('closePoll', {id: pollId });
+  socket.send('closePoll', pollId);
 });
 
 socket.on('closePoll', function () {

@@ -2,16 +2,20 @@ extends layout
 
 block content
   body
-  .container.center
-    h3 #{poll.title}
-    #status-message
-    h5#choices
-      each response in poll.responses
-        input(type="button", name="#{response}-votes" value="#{response}").btn
-        br
-        br
-  .container.center
-    h5#my-vote
-    br
-    h3#vote-count
-    br
+    .container.center
+      h3 #{poll.title}
+      #status-message
+      h5#choices
+        if poll.active === true
+          each response in poll.responses
+            input(type="button", name="#{response}-votes" value="#{response}").btn
+            br
+            br
+        else
+          p
+          This poll is closed
+    .container.center
+      h5#my-vote
+      br
+      h3#vote-count
+      br
