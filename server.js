@@ -14,8 +14,6 @@ const port = process.env.PORT || 3000;
 const generateRoutes = require('./lib/generate-routes');
 const Poll = require('./lib/generate-poll');
 
-const locus = require('locus');
-
 if (!module.parent) {
   server.listen(port, function () { console.log('Listening on port ' + port + '.'); });
 }
@@ -26,6 +24,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.title = 'InstaPoll';
 app.locals.polls = {};
+
+//////////////////////////////////////////////////////////////// ROUTES
 
 app.get('/', (request, response) => {
   response.render(__dirname + '/views/create');
@@ -58,7 +58,7 @@ app.get('/vote/:id', (request, response) => {
   response.render(__dirname + '/views/vote', { poll: poll });
 });
 
-////////////////////////////////////////////////////////////// IO CONNECTIONS
+//////////////////////////////////////////////////////////////// IO CONNECTIONS
 io.on('connection', function (socket) {
   var userVotes = {};
   io.sockets.emit('usersConnected', io.engine.clientsCount);
@@ -72,14 +72,25 @@ io.on('connection', function (socket) {
   });
 
   socket.on('message', function (channel, pollId) {
-    if (channel === 'closePoll'){
-      app.locals.polls[pollId].active = false;
+    if (channel === 'closePoll') { closePoll(pollId); }
+  });
+
+  // TIMEOUT ON DATE
+  socket.on('message', function (channel, pollId, timeout) {
+    if (channel === 'pollTimeout') {
+      setTimeout(closePoll(pollId), timeout);
+    }
+  });
+
+  // ANONYMOUS RESULTS
+  socket.on('message', function (channel) {
+    if (channel === 'anonymousResults') {
+      socket.emit('hideVoteResults');
     }
   });
 
   socket.on('disconnect', function () {
     console.log('A user has disconnected.', io.engine.clientsCount);
-    socket.emit('adminVoteCount');
     io.sockets.emit('userConnection', io.engine.clientsCount);
   });
 });
@@ -96,11 +107,11 @@ function countVotes(userVotes, pollId) {
   return voteCount;
 }
 
+function closePoll(pollId) {
+  app.locals.polls[pollId].active = false;
+}
 
-
-
-
-////////////////////////////////////////////////////// ERROR HANDLING
+//////////////////////////////////////////////////////////////// ERROR HANDLING
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

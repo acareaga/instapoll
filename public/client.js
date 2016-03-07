@@ -16,46 +16,50 @@ var $timeoutTime = $('.timeout-time');
 var $responseList = $('.response-list');
 var $addResponse = $('.add-response');
 
-// LISTEN TO BUTTON CLICKS ON VOTE
 var buttons = $('#choices input');
+
 for (var i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener('click', function () {
     socket.send('voteCast', this.value, pollId);
   });
 }
 
-// DISPLAY USER CHOICE ON VOTE
 var myVote = $('#my-vote');
 var responseButtons = $('#choices');
+
 socket.on('myVoteCast', function (vote) {
-  responseButtons.children().remove();
   myVote.empty().append(vote);
+  responseButtons.children().remove();
 });
 
-var currentVoteItem = document.getElementById('vote-item');
+var currentVoteItem = $('#vote-item');
+
 socket.on('currentVoteCount',function(votes){
   $('#greeting').text('thank you for voting');
   $('#choices').children().remove();
   currentVoteItem.innerText = votes;
 });
 
-// DISPLAY POLL TALLY ON VOTE
-var count = $('#vote-count');
+var voteCount = $('#vote-count');
+
 socket.on('voteCount', function (votes) {
-  var votesToDisplay = "Vote Count:";
+  var votesToDisplay = "Vote Count: <br><br>";
   for (var vote in votes) {
-    votesToDisplay = votesToDisplay + ' ' + vote + ': ' + votes[vote] + ' ';
+    votesToDisplay = votesToDisplay + ' ' + vote + ': ' + votes[vote] + '<br>';
   }
-  count.empty().append(votesToDisplay);
+  voteCount.empty().append(votesToDisplay);
 });
 
-// EMIT # USERS CONNECTED ON ADMIN
+// NEED TO FIX HIDE RESULTS ON ANONYMOUS
+socket.on('hideVoteResults', function () {
+  count.hide();
+});
+
 var connectionCount = $('#connection-count');
+
 socket.on('usersConnected', function (count) {
   connectionCount.empty().append('Connected Users: ' + count);
 });
-
-////////////////////////////////////////////////////////////////// JQUERY BUTTON ACTIONS
 
 $addResponse.click(event, function() {
   $responseList.append(
@@ -65,17 +69,18 @@ $addResponse.click(event, function() {
   );
 });
 
-$anonymousResultsButton.click(event, function() {
-  console.log('ANONYMOUS - HIDE THE VOTE COUNT');
-});
-
 $closePollButton.click(event, function() {
-  console.log("POLL CLOSE SWITCH");
   socket.send('closePoll', pollId);
 });
 
-socket.on('closePoll', function () {
-  for (let i = 0; i < $buttons.length; i++) {
-    $buttons[i].className += ' disabled';
-  }
+$anonymousResultsButton.click(event, function() {
+  console.log('ANONYMOUS - HIDE THE VOTE COUNT');
+  socket.send('anonymousResults', pollId);
+});
+
+$createButton.click(event, function() {
+  console.log("CREATE CLICKED");
+  var date = $timeoutDate;
+  var time = $timeoutTime;
+  socket.send('pollTimeout', pollId, date, time);
 });
