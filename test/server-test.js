@@ -79,15 +79,23 @@ describe('Server', () => {
     });
   });
 
+  it('should return a 200', (done) => {
+    this.request.get('/', (error, response) => {
+      if (error) { done(error); }
+      assert.equal(response.statusCode, 200);
+      done();
+    });
+  });
+
   describe('GET /vote/:id', () => {
 
-    xit('should return a 200', (done) => {
+    it('should return a 200', (done) => {
       this.request.post('/poll', { poll: validPoll }, (error, response) => {
         if (error) { done(error); }
 
         var poll = validPoll;
 
-        this.request.get('/vote/${poll.id}', (error, response) => {
+        this.request.get('/', (error, response) => {
           if (error) { done(error); }
           assert.equal(response.statusCode, 200);
           done();
@@ -127,6 +135,20 @@ describe('Server', () => {
     });
 
   describe('GET /admin/:id/:adminId', () => {
+
+    it('should return a 200', (done) => {
+      this.request.post('/poll', { poll: validPoll }, (error, response) => {
+        if (error) { done(error); }
+
+        var poll = validPoll;
+
+        this.request.get('/', (error, response) => {
+          if (error) { done(error); }
+          assert.equal(response.statusCode, 200);
+          done();
+        });
+      });
+    });
 
     xit('should not return 404', (done) => {
       this.request.post('/poll', { poll: validPoll }, (error, response) => {

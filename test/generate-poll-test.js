@@ -3,7 +3,7 @@ var assert = require('chai').assert;
 
 describe('Generate Poll', function() {
 
-  it('creates a valid poll', function() {
+  xit('creates a valid poll', function() {
     var poll = new Poll({
       data: {
           id: 'ef583188a91f3aface14',
