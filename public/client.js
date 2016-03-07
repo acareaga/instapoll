@@ -50,7 +50,7 @@ socket.on('voteCount', function (votes) {
   voteCount.empty().append(votesToDisplay);
 });
 
-// NEED TO FIX HIDE RESULTS ON ANONYMOUS
+///////////////////////////////////// NEED TO FIX HIDE RESULTS ON ANONYMOUS
 socket.on('hideVoteResults', function () {
   count.hide();
 });
@@ -72,14 +72,15 @@ $addResponse.click(event, function() {
 $closePollButton.click(event, function() {
   socket.send('closePoll', pollId);
 });
-
+///////////////////////////////////////////////////////////
 $anonymousResultsButton.click(event, function() {
   console.log('ANONYMOUS - HIDE THE VOTE COUNT');
   socket.send('anonymousResults', pollId);
 });
 
+////////////////////////////////////////////////// TIMEOUT
 $createButton.click(event, function() {
-  console.log("CREATE CLICKED");
+  console.log("CREATE CLICKED CLICKED");
   var date = $timeoutDate;
   var time = $timeoutTime;
   socket.send('pollTimeout', pollId, date, time);

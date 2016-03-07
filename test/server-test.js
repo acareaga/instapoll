@@ -13,6 +13,16 @@ const Routes = require('../lib/generate-routes');
 
 describe('Server', () => {
 
+  var validPoll = {
+    id: 'b8fc72a82dc906bfdb51',
+    title: 'Lunch on Friday',
+    responses: [ 'Chipolte', 'Red Robin', 'The Vault', 'Rio' ],
+    adminPath: 'http://localhost:3000/admin/b8fc72a82dc906bfdb51/d5be21642a',
+    votePath: 'http://localhost:3000/vote/b8fc72a82dc906bfdb51',
+    active: true,
+    pollChoices: { 'Chipolte': 1, 'Red Robin': 0, 'The Vault': 0, 'Rio': 0 },
+  };
+
   before((done) => {
     this.port = 9876;
     this.server = app.listen(this.port, (err, result) => {
@@ -41,71 +51,104 @@ describe('Server', () => {
         done();
       });
     });
+  });
 
-  it('should have a body with the name of the application', (done) => {
-     let title = app.locals.title;
+  describe('POST /poll', () => {
 
-     this.request.get('/', (error, response) => {
-       if (error) { done(error); }
-       assert(response.body.includes(title),
-             `"${response.body} does not include ${title}"`);
-       done();
-     });
-   });
+    xit('should not return 404', (done) => {
+      this.request.post('/poll', { form: validPollData }, (error, response) => {
+        if (error) { done(error); }
+        assert.notEqual(response.statusCode, 404);
+        done();
+      });
+    });
+
+    xit('should return a page that has the title of the poll', (done) => {
+      var poll = validPoll;
+
+      this.request.post('/poll', { form: validPollData }, (error, response) => {
+        if (error) { done(error); }
+        assert(response.body.includes(poll.title),
+               `"${response.body}" does not include "${poll.title}".`);
+        done();
+      });
+    });
   });
 
   describe('GET /vote/:id', () => {
 
     xit('should return a 200', (done) => {
-      this.request.get('/vo', (error, response) => {
+      this.request.post('/poll', { form: pollData }, (error, response) => {
         if (error) { done(error); }
-        assert.equal(response.statusCode, 200);
-        done();
+
+        var poll = validPoll;
+
+        this.request.get('/vote/${poll.id}', (error, response) => {
+          if (error) { done(error); }
+          assert.equal(response.statusCode, 200);
+          done();
+        });
       });
     });
 
     xit('should not return 404', (done) => {
-      this.request.get('/polls/testPoll', (error, response) => {
+      this.request.post('/poll', { form: pollData }, (error, response) => {
         if (error) { done(error); }
-        assert.notEqual(response.statusCode, 404);
-        done();
+
+        var poll = validPoll;
+
+        this.request.get('/vote/${poll.id}', (error, response) => {
+          if (error) { done(error); }
+          assert.notEqual(response.statusCode, 404);
+          done();
+        });
       });
     });
 
     xit('should return a page that has the title of the poll', (done) => {
-      var poll = app.locals.polls.testPoll;
-
-      this.request.get('/polls/testPoll', (error, response) => {
+      this.request.post('/poll', { form: pollData }, (error, response) => {
         if (error) { done(error); }
-        assert(response.body.includes(poll.name),
-               `"${response.body}" does not include "${poll.name}".`);
-        done();
+
+        var poll = validPoll;
+
+        this.request.get('/vote/${poll.id}', (error, response) => {
+          if (error) { done(error); }
+          assert(response.body.includes(poll.name),
+                 `"${response.body}" does not include "${poll.title}".`);
+          done();
+        });
       });
     });
-  });
 
   describe('GET /admin/:id/:adminId', () => {
 
-    beforeEach(() => {
-      app.locals.polls.testPoll = fixtures.validPoll;
-    });
-
     xit('should not return 404', (done) => {
-      this.request.get('/polls/testPoll', (error, response) => {
+      this.request.post('/poll', { form: pollData }, (error, response) => {
         if (error) { done(error); }
-        assert.notEqual(response.statusCode, 404);
-        done();
+
+        var poll = validPoll;
+
+        this.request.get('/admin/${poll.id}/${poll.adminId}', (error, response) => {
+          if (error) { done(error); }
+          assert.notEqual(response.statusCode, 404);
+          done();
+        });
       });
     });
 
     xit('should return a page that has the title of the poll', (done) => {
-      var poll = app.locals.polls.testPoll;
-
-      this.request.get('/polls/testPoll', (error, response) => {
+      this.request.post('/poll', { form: pollData }, (error, response) => {
         if (error) { done(error); }
-        assert(response.body.includes(poll.name),
-               `"${response.body}" does not include "${poll.name}".`);
-        done();
+
+        var poll = validPoll;
+
+        this.request.get('/admin/${poll.id}/${poll.adminId}', (error, response) => {
+          if (error) { done(error); }
+          assert(response.body.includes(poll.name),
+                 `"${response.body}" does not include "${poll.name}".`);
+          done();
+          });
+        });
       });
     });
   });
