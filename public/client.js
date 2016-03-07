@@ -24,10 +24,29 @@ for (var i = 0; i < buttons.length; i++) {
   });
 }
 
+{/*<div id="choices">
+    <%if(votes.active === true) { %>
+      <% votes.choices.forEach(function(vote){ %>
+          <button><%= vote %> </button>
+      <% }) %>
+  <% } else { %>
+      <h1> voting is now closed fam <h1>
+  <% } %>
+</div>*/}
+
 // DISPLAY USER CHOICE ON VOTE
 var myVote = $('#my-vote');
+var responseButtons = $('#choices');
 socket.on('myVoteCast', function (vote) {
+  responseButtons.children().remove();
   myVote.empty().append(vote);
+});
+
+var currentVoteItem = document.getElementById('vote-item');
+socket.on('currentVoteCount',function(votes){
+  $('#greeting').text('thank you for voting');
+  $('#choices').children().remove();
+  currentVoteItem.innerText = votes;
 });
 
 // DISPLAY POLL TALLY ON VOTE
