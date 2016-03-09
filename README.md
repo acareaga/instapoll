@@ -38,7 +38,13 @@ npm test
 Uses with the following versions:
 
 ```
-"express": "4.13.4"
+"express": "4.13.4",
+"body-parser": "1.15.0",
+"jade": "1.11.0",
+"jquery": "2.2.1",
+"locus": "1.2.0",
+"lodash": "4.6.1",
+"socket.io": "1.4.5"
 ```
 
 ## Contributing
