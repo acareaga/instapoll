@@ -4,7 +4,7 @@
 
 ## Description
 
-InstaPoll is a peer-to-peer realtime feedback app built with Node, Express, and jQuery. The application was built by [Aaron Careaga](https://twitter.com/aaroncareaga) for the final project in Module 4 at the Turing School.
+InstaPoll is a peer-to-peer realtime feedback app built with Node, Express, jQuery, and Socket.io.
 
 ## Installation
 
